@@ -236,12 +236,16 @@ class Wp_Terms_Popup_Admin
     {
         do_action('wptp_before_meta_boxes_post_type', $object, $box);
 
+        $current_screen = get_current_screen();
+        
         $default_termsopt_agreetxt = get_option('termsopt_agreetxt');
+        $default_termsopt_agree_redirecturl = get_option('termsopt_agree_redirecturl');
         $default_termsopt_terms_disagreetxt = get_option('termsopt_disagreetxt');
         $default_termsopt_redirecturl = get_option('termsopt_redirecturl');
         $default_termsopt_buttons_always_visible = get_option('termsopt_buttons_always_visible', 0);
 
         $post_terms_agreetxt = get_post_meta($object->ID, 'terms_agreetxt', true);
+        $post_terms_agree_redirecturl = get_post_meta($object->ID, 'terms_agree_redirecturl', true);
         $post_terms_disagreetxt = get_post_meta($object->ID, 'terms_disagreetxt', true);
         $post_terms_redirecturl = get_post_meta($object->ID, 'terms_redirecturl', true);
         $post_terms_buttons_always_visible = get_post_meta($object->ID, 'terms_buttons_always_visible', true);
@@ -250,8 +254,10 @@ class Wp_Terms_Popup_Admin
         $post_terms_age_on = get_post_meta($object->ID, 'terms_age_on', true);
         $post_terms_age_requirement = get_post_meta($object->ID, 'terms_age_requirement', true);
         $post_terms_age_date_format = get_post_meta($object->ID, 'terms_age_date_format', true);
+        $post_terms_age_message = get_post_meta($object->ID, 'terms_age_message', true);
 
         $meta_terms_agreetxt = '';
+        $meta_terms_agree_redirecturl = '';
         $meta_terms_disagreetxt = '';
         $meta_terms_redirecturl = '';
         $meta_terms_buttons_always_visible = 0;
@@ -260,30 +266,38 @@ class Wp_Terms_Popup_Admin
         $meta_terms_age_on = 0;
         $meta_terms_age_requirement = '';
         $meta_terms_age_date_format = '';
+        $meta_terms_age_message = '';
 
         // Buttons - Agree Button Text
-        if (strlen($post_terms_agreetxt) == 0) {
+        if (isset($current_screen->action) && $current_screen->action == 'add' && strlen($post_terms_agreetxt) == 0) {
             $meta_terms_agreetxt = $default_termsopt_agreetxt;
         } else {
             $meta_terms_agreetxt = $post_terms_agreetxt;
         }
 
+        // Buttons - Agree URL Redirect
+        if (isset($current_screen->action) && $current_screen->action == 'add' && strlen($post_terms_agree_redirecturl) == 0) {
+            $meta_terms_agree_redirecturl = $default_termsopt_agree_redirecturl;
+        } else {
+            $meta_terms_agree_redirecturl = $post_terms_agree_redirecturl;
+        }
+
         // Buttons - Decline Button Text
-        if (strlen($post_terms_disagreetxt) == 0) {
+        if (isset($current_screen->action) && $current_screen->action == 'add' && strlen($post_terms_disagreetxt) == 0) {
             $meta_terms_disagreetxt = $default_termsopt_terms_disagreetxt;
         } else {
             $meta_terms_disagreetxt = $post_terms_disagreetxt;
         }
 
         // Buttons - Decline URL Redirect
-        if (strlen($post_terms_redirecturl) == 0) {
+        if (isset($current_screen->action) && $current_screen->action == 'add' && strlen($post_terms_redirecturl) == 0) {
             $meta_terms_redirecturl = $default_termsopt_redirecturl;
         } else {
             $meta_terms_redirecturl = $post_terms_redirecturl;
         }
 
         // Buttons - Buttons Always Visible?
-        if (strlen($post_terms_buttons_always_visible) == 0) {
+        if (isset($current_screen->action) && $current_screen->action == 'add' && strlen($post_terms_buttons_always_visible) == 0) {
             $meta_terms_buttons_always_visible = $default_termsopt_buttons_always_visible;
         } else {
             $meta_terms_buttons_always_visible = $post_terms_buttons_always_visible;
@@ -312,6 +326,11 @@ class Wp_Terms_Popup_Admin
         // Age Verification - Date Format?
         if (strlen($post_terms_age_date_format) != 0) {
             $meta_terms_age_date_format = $post_terms_age_date_format;
+        }
+
+        // Age Verification - Message
+        if (strlen($post_terms_age_message) != 0) {
+            $meta_terms_age_message = $post_terms_age_message;
         }
 
         include 'partials/wp-terms-popup-admin-post-type-meta-boxes.php';
@@ -356,7 +375,7 @@ class Wp_Terms_Popup_Admin
             return $post_id;
         }
 
-        $meta_keys = ['terms_agreetxt', 'terms_disagreetxt', 'terms_redirecturl', 'terms_buttons_always_visible', 'terms_acknowledgement_on', 'terms_acknowledgement_text', 'terms_age_on', 'terms_age_requirement', 'terms_age_date_format'];
+        $meta_keys = ['terms_agreetxt', 'terms_agree_redirecturl', 'terms_disagreetxt', 'terms_redirecturl', 'terms_buttons_always_visible', 'terms_acknowledgement_on', 'terms_acknowledgement_text', 'terms_age_on', 'terms_age_requirement', 'terms_age_date_format', 'terms_age_message'];
 
         foreach ($meta_keys as $meta_key) {
             $meta_value = get_post_meta($post_id, $meta_key, true);
@@ -478,6 +497,7 @@ class Wp_Terms_Popup_Admin
                 'termsopt_sitewide',
                 'termsopt_page',
                 'termsopt_agreetxt',
+                'termsopt_agree_redirecturl',
                 'termsopt_disagreetxt',
                 'termsopt_redirecturl',
                 'termsopt_buttons_always_visible',

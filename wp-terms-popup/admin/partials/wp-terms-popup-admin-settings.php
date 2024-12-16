@@ -183,6 +183,11 @@
                             </tr>
                             
                             <tr>
+                                <th><?php _e('Agree URL Redirect', $this->plugin_name); ?></th>
+                                <td><input type="text" name="termsopt_agree_redirecturl" size="45" value="<?php echo esc_attr(get_option('termsopt_agree_redirecturl')); ?>"></td>
+                            </tr>
+                            
+                            <tr>
                                 <th><?php _e('Decline Button Text', $this->plugin_name); ?></th>
                                 <td><input type="text" name="termsopt_disagreetxt" size="20" value="<?php echo esc_attr(get_option('termsopt_disagreetxt')); ?>"></td>
                             </tr>

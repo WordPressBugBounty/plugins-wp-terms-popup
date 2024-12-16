@@ -147,6 +147,12 @@ class Wp_Terms_Popup_Public
             if (function_exists('wptp_collector_update_logs')) {
                 wptp_collector_update_logs($termspageid);
             }
+
+            $terms_agree_redirecturl = get_post_meta($termspageid, 'terms_agree_redirecturl', true);
+            if (!empty($terms_agree_redirecturl)) {
+                wp_redirect($terms_agree_redirecturl);
+                exit;
+            }
         }
     }
 
@@ -475,11 +481,13 @@ class Wp_Terms_Popup_Public
     private function age_verification($popup_id)
     {
         $terms_age_on = get_post_meta($popup_id, 'terms_age_on', true);
-        $terms_age_requirement = get_post_meta($popup_id, 'terms_age_requirement', true);
-        $terms_age_requirement = (metadata_exists('post', $popup_id, 'terms_age_requirement') ? get_post_meta($popup_id, 'terms_age_requirement', true) : 18);
-        $terms_age_date_format = (metadata_exists('post', $popup_id, 'terms_age_date_format') ? get_post_meta($popup_id, 'terms_age_date_format', true) : 'Y-M-D');
 
         if ($terms_age_on == 1) {
+            $terms_age_requirement = get_post_meta($popup_id, 'terms_age_requirement', true);
+            $terms_age_requirement = (metadata_exists('post', $popup_id, 'terms_age_requirement') ? get_post_meta($popup_id, 'terms_age_requirement', true) : 18);
+            $terms_age_date_format = (metadata_exists('post', $popup_id, 'terms_age_date_format') ? get_post_meta($popup_id, 'terms_age_date_format', true) : 'Y-M-D');
+            $terms_age_message = (metadata_exists('post', $popup_id, 'terms_age_message') ? get_post_meta($popup_id, 'terms_age_message', true) : '');
+
             $date_format = explode('-', $terms_age_date_format);
 
             $current_date = new DateTime(current_time('Y-m-d'));

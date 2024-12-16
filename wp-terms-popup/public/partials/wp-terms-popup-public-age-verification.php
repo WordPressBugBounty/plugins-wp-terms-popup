@@ -10,6 +10,13 @@
  */
 ?>
 <table class="wptpa-dropdowns">
+    <?php if (isset($terms_age_message) && !empty($terms_age_message)) : ?>
+    <tr>
+        <td colspan="<?php echo count($columns); ?>">
+            <div class="wpta-age-verification-message"><?php echo $terms_age_message; ?></div>
+        </td>
+    </tr>
+    <?php endif; ?>
     <tr>
         <?php foreach ($columns as $df => $column) : ?>
         <td>

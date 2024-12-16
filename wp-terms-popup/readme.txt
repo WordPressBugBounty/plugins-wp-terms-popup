@@ -2,9 +2,9 @@
 Contributors: linksoftware, tentenbiz
 Tags: popup, terms and conditions, terms of service, privacy policy, age verification
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.8.1
+Stable tag: 2.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,10 @@ Yes, on the condition that you are not using the "Load popups with JavaScript" o
 5. Disable a Popup on an Individual Post/Page
 
 == Changelog ==
+
+= 2.9.0 =
+* Added new "Agree URL Redirect" setting to redirect users to a URL after they agree to a popup.
+* Added new "Message" setting to display above Age Verification dropdowns.
 
 = 2.8.1 =
 * Added action `wptp_popup_before_content` to allow for additional markup to be added before the popup content.

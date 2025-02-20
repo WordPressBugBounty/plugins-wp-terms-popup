@@ -390,6 +390,10 @@ class Wp_Terms_Popup_Public
                 return;
             }
         } elseif (get_option('termsopt_sitewide') <> 1) {
+            if (is_search()) {
+                return;
+            }
+
             if ($shortcode != null) {
                 $termspageid = $shortcode;
             } else {

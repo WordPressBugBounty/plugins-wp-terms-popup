@@ -57,8 +57,8 @@ class Wp_Terms_Popup_Admin
     public function menu()
     {
         add_submenu_page('edit.php?post_type=termpopup', __('WP Terms Popup Settings', $this->plugin_name), __('Settings', $this->plugin_name), 'manage_options', $this->plugin_name.'-settings', [$this, 'settings']);
-        add_submenu_page('edit.php?post_type=termpopup', __('WP Terms Popup Designer', $this->plugin_name), __('Designer', $this->plugin_name), 'manage_options', $this->plugin_name.'-designer', [$this, 'designer']);
-        add_submenu_page('edit.php?post_type=termpopup', __('WP Terms Popup Collector', $this->plugin_name), __('Collector', $this->plugin_name), 'manage_options', $this->plugin_name.'-collector', [$this, 'collector']);
+        add_submenu_page('edit.php?post_type=termpopup', __('WP Terms Popup Designer', $this->plugin_name), __('Designer', $this->plugin_name), 'edit_pages', $this->plugin_name.'-designer', [$this, 'designer']);
+        add_submenu_page('edit.php?post_type=termpopup', __('WP Terms Popup Collector', $this->plugin_name), __('Collector', $this->plugin_name), 'edit_pages', $this->plugin_name.'-collector', [$this, 'collector']);
 
         do_action('wptp_menu');
     }

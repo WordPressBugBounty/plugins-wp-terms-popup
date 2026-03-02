@@ -2,9 +2,9 @@
 Contributors: linksoftware, tentenbiz
 Tags: popup, terms and conditions, terms of service, privacy policy, age verification
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 2.10.0
+Stable tag: 2.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,9 @@ Yes, on the condition that you are not using the "Load popups with JavaScript" o
 5. Disable a Popup on an Individual Post/Page
 
 == Changelog ==
+
+= 2.11.0 =
+* Security fixes and improvements.
 
 = 2.10.0 =
 * Changed the user capability required to access the Designer and Collector add-ons.

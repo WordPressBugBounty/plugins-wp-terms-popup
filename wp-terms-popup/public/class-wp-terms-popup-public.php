@@ -163,15 +163,25 @@ class Wp_Terms_Popup_Public
      */
     public function ajaxhandler_css()
     {
-        // check_ajax_referer('wptp-ajaxhandler-nonce', 'wptp_nonce');
-
         if (!isset($_POST['wptp_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['wptp_nonce']), 'wptp-ajaxhandler-nonce')) {
-            exit();
+            wp_die('', 'Forbidden', array('response' => 403));
         }
 
-        $wptp_content['css'] = $this->popup_css($_POST['termspageid']);
+        if (!isset($_POST['termspageid']) || !is_numeric($_POST['termspageid'])) {
+            wp_die('', 'Bad Request', array('response' => 400));
+        }
 
-        die(json_encode($wptp_content));
+        $terms_page_id = intval($_POST['termspageid']);
+        
+        // Verify that the post exists, is of the correct type, and is published
+        $post = get_post($terms_page_id);
+        if (!$post || $post->post_type !== 'termpopup' || $post->post_status !== 'publish') {
+            wp_die('', 'Bad Request', array('response' => 400));
+        }
+
+        $wptp_content['css'] = $this->popup_css($terms_page_id);
+
+        wp_die(json_encode($wptp_content));
     }
 
     /**
@@ -181,15 +191,25 @@ class Wp_Terms_Popup_Public
      */
     public function ajaxhandler_popup()
     {
-        // check_ajax_referer('wptp-ajaxhandler-nonce', 'wptp_nonce');
-
         if (!isset($_POST['wptp_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['wptp_nonce']), 'wptp-ajaxhandler-nonce')) {
-            exit();
+            wp_die('', 'Forbidden', array('response' => 403));
         }
 
-        $wptp_content['popup'] = $this->popup_html(sanitize_text_field($_POST['termspageid']));
+        if (!isset($_POST['termspageid']) || !is_numeric($_POST['termspageid'])) {
+            wp_die('', 'Bad Request', array('response' => 400));
+        }
 
-        die(json_encode($wptp_content));
+        $terms_page_id = intval($_POST['termspageid']);
+        
+        // Verify that the post exists, is of the correct type, and is published
+        $post = get_post($terms_page_id);
+        if (!$post || $post->post_type !== 'termpopup' || $post->post_status !== 'publish') {
+            wp_die('', 'Bad Request', array('response' => 400));
+        }
+
+        $wptp_content['popup'] = $this->popup_html($terms_page_id);
+
+        wp_die(json_encode($wptp_content));
     }
 
     /**
@@ -313,6 +333,17 @@ class Wp_Terms_Popup_Public
     private function popup_css($terms_id)
     {
         include_once ABSPATH.'wp-admin/includes/plugin.php';
+        
+        if (!is_numeric($terms_id) || $terms_id <= 0) {
+            return '';
+        }
+
+        $post = get_post($terms_id);
+        
+        // Verify that the post exists, is of the correct type, and is published
+        if (!$post || $post->post_type !== 'termpopup' || $post->post_status !== 'publish') {
+            return '';
+        }
         
         $wptp_css = '';
 
@@ -439,9 +470,18 @@ class Wp_Terms_Popup_Public
      */
     private function title($popup_id)
     {
-        $popup_title = get_the_title($popup_id);
+        if (!is_numeric($popup_id) || $popup_id <= 0) {
+            return '';
+        }
 
-        return $popup_title;
+        $post = get_post($popup_id);
+        
+        // Verify that the post exists, is of the correct type, and is published
+        if (!$post || $post->post_type !== 'termpopup' || $post->post_status !== 'publish') {
+            return '';
+        }
+
+        return get_the_title($popup_id);
     }
 
     /**
@@ -453,7 +493,17 @@ class Wp_Terms_Popup_Public
     {
         include_once ABSPATH.'wp-admin/includes/plugin.php';
 
+        if (!is_numeric($popup_id) || $popup_id <= 0) {
+            return '';
+        }
+
         $wptp_popup = get_post($popup_id);
+        
+        // Verify that the post exists, is of the correct type, and is published
+        if (!$wptp_popup || $wptp_popup->post_type !== 'termpopup' || $wptp_popup->post_status !== 'publish') {
+            return '';
+        }
+
         $popup_content = '';
 
         if ($popup_id && function_exists('wptp_collector_update_results')) {
